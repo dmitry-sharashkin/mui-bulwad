@@ -2,23 +2,42 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useGetAuthTokenMutation } from "../../store/auth/auth.api";
+import { setAccessToken } from "../../cookies/cookies";
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [isEmailError, setIsEmailError] = React.useState(false);
+  const [isPasswordError, setIsPasswordError] = React.useState(false);
+
+  const [getAuthToken, { isError, error }] = useGetAuthTokenMutation();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+    setIsEmailError(false);
+    setIsPasswordError(false);
+    if (!email || !password) {
+      !email && setIsEmailError(true);
+      !password && setIsPasswordError(false);
+      return;
+    }
+    const response: any = await getAuthToken({
+      email,
+      password,
     });
+    if (response?.data) {
+      setAccessToken(response?.data?.access_token);
+      navigate("/");
+    }
   };
 
   return (
@@ -43,7 +62,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Вход
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -51,38 +70,45 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email"
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={isEmailError || isError}
           />
           <TextField
             margin="normal"
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Пароль"
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={isPasswordError || isError}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+          {isError && (
+            <Typography sx={{ color: "error.main" }}>Ошибка входа</Typography>
+          )}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Войти
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
+              <NavLink to={"/signUp"}>
+                <Typography sx={{ color: "primary.main" }} variant="body2">
+                  {"Нет аккаунта? Пройдите регистрацию."}
+                </Typography>
+              </NavLink>
             </Grid>
           </Grid>
         </Box>
