@@ -2,11 +2,13 @@ import { usersApi } from "./users/users.api";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/auth.slice";
 import { authApi } from "./auth/auth.api";
+import { coursesApi } from "./courses/courses.api";
 
 const combinedReducer: any = combineReducers({
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [coursesApi.reducerPath]: coursesApi.reducer,
 });
 
 export const store = configureStore({
@@ -14,7 +16,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
-      .concat(usersApi.middleware),
+      .concat(usersApi.middleware)
+      .concat(coursesApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
