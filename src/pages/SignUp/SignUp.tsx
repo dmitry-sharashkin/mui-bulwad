@@ -26,11 +26,11 @@ export default function SignUp() {
       const response: any = await createUser({
         email: values.email,
         password: values.password,
-        full_name:
-          values.lastName + values.firstName ? ` ${values.firstName}` : "",
+        full_name: `${values.lastName}  ${
+          values.firstName ? ` ${values.firstName}` : ""
+        }`,
       });
       if (response?.data) {
-        console.log(response?.data?.access_token);
         navigate("/signIn");
       }
     },

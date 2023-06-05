@@ -1,40 +1,27 @@
 import React from "react";
 
-import styles from "./styles.module.css";
-
+import dayjs from "dayjs";
+import { useGetUserCoursesQuery } from "../../store/userCourses/userCourses.api";
 import {
   Box,
   Button,
   Card,
   CardActions,
   CardContent,
+  Chip,
   Divider,
   Grid,
   Typography,
 } from "@mui/material";
-import { useGetCoursesQuery } from "../../store/courses/courses.api";
-import dayjs from "dayjs";
 import { NavLink } from "react-router-dom";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import {
-  useGetUserCoursesQuery,
-  useSubscribeCourseMutation,
-} from "../../store/userCourses/userCourses.api";
 
-export default function Main() {
-  const { data, refetch } = useGetCoursesQuery();
-  const { refetch: refetchUserCourses } = useGetUserCoursesQuery();
-  const [subscribeCourse] = useSubscribeCourseMutation();
-
-  async function onSubscribeClick(id: number) {
-    await subscribeCourse({ course_id: id });
-    refetch();
-    refetchUserCourses();
-  }
+export default function MyCourses() {
+  const { data } = useGetUserCoursesQuery();
 
   return (
     <>
       <Grid container spacing={4}>
+        {data?.payload.length === 0 && <Typography>Нет курсов</Typography>}
         {data?.payload.map((item) => (
           <Grid item key={item.id} xs={12} sm={6} md={6}>
             <Card
@@ -54,13 +41,31 @@ export default function Main() {
                   {item.title}
                 </Typography>
                 <Divider />
-                <div className={styles.cardText}>
-                  <ReactMarkdown>{item.description || ""}</ReactMarkdown>
-                </div>
+                <Box
+                  mt={2}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {item.completed ? (
+                    <Chip label="Пройден" color="success" variant="outlined" />
+                  ) : (
+                    <Chip
+                      label="Не пройден"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
+                  <Typography>Баллов: {item.grade}</Typography>
+                </Box>
               </CardContent>
               <CardActions sx={{ justifyContent: "space-between" }}>
                 <Typography>
                   <span>
+                    Создан:{" "}
                     {dayjs(item.created_at).locale("ru").format("DD.MM.YYYY")}
                   </span>
                 </Typography>
@@ -68,14 +73,12 @@ export default function Main() {
                   <NavLink to={`/course/${item.id}`}>
                     <Button size="small">Открыть</Button>
                   </NavLink>
-                  {!item.is_subscribed && (
-                    <Button
-                      size="small"
-                      onClick={() => onSubscribeClick(item.id)}
-                    >
-                      Подписаться
-                    </Button>
-                  )}
+                  {/* <Button
+                    size="small"
+                    onClick={() => subscribeCourse({ course_id: item.id })}
+                  >
+                    Подписаться
+                  </Button> */}
                 </Box>
               </CardActions>
             </Card>

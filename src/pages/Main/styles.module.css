@@ -5,9 +5,9 @@
   display: -moz-box;
   -moz-box-orient: vertical;
   display: -webkit-box;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   line-clamp: 2;
   box-orient: vertical;
-  font-weight: 400;
+  font-size: smaller;
 }
