@@ -11,6 +11,7 @@ import Course from "../../pages/Course/Course";
 import MyCourses from "../../pages/MyCourses/MyCourses";
 import NotFound from "../../pages/NotFound/NotFound";
 import Profile from "../../pages/Profile/Profile";
+import CourseCompletion from "../../pages/CourseCompletion/CourseCompletion";
 
 export default function Router() {
   const isAuthActive = useAppSelector(selectIsAuthActive);
@@ -29,6 +30,10 @@ export default function Router() {
         <Route element={<Main />} index path="/" />
         <Route element={<Course />} path="/course/:id" />
         <Route element={<MyCourses />} path="/myCourses" />
+        <Route
+          element={<CourseCompletion />}
+          path="/courseCompletion/:courseId"
+        />
         <Route element={<Profile />} path="/profile" />
         <Route path="*" element={<NotFound />} />
       </Route>

@@ -62,7 +62,9 @@ export default function Layout() {
                     src={data?.payload.avatar}
                   />
                 ) : (
-                  <Avatar>{data?.payload.full_name.slice(0, 1)}</Avatar>
+                  <Avatar>
+                    {data?.payload.full_name.slice(0, 1).toUpperCase()}
+                  </Avatar>
                 )}
               </NavLink>
             </Tooltip>

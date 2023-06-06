@@ -70,15 +70,9 @@ export default function MyCourses() {
                   </span>
                 </Typography>
                 <Box>
-                  <NavLink to={`/course/${item.id}`}>
-                    <Button size="small">Открыть</Button>
+                  <NavLink to={`/courseCompletion/${item.id}`}>
+                    <Button size="small">Пройти</Button>
                   </NavLink>
-                  {/* <Button
-                    size="small"
-                    onClick={() => subscribeCourse({ course_id: item.id })}
-                  >
-                    Подписаться
-                  </Button> */}
                 </Box>
               </CardActions>
             </Card>

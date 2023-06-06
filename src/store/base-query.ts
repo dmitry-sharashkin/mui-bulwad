@@ -8,7 +8,7 @@ import { loggedOut } from "./auth/auth.slice";
 import { getAccessToken } from "../cookies/cookies";
 
 const baseQueryWithToken = fetchBaseQuery({
-  baseUrl: "https://rubyprolabs.pw/",
+  baseUrl: "https://api.rubyprolabs.pw/",
   prepareHeaders: (headers) => {
     const token = getAccessToken();
     if (token) {
